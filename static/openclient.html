@@ -1,0 +1,26 @@
+<div class="container container-fluid col-sm-10">
+<div class="panel-group">
+ <div class="panel panel-primary">
+  <div class="panel-heading">Open Client</div>
+   <div class="panel-body">
+    <table class="table table-condensed">
+      <thead>
+       <tr>
+        <th>Client Name</th>
+        <th>Fiscal Year</th>
+        <th>Open</th>
+       </tr>
+      </thead>
+       <tbody>
+        <tr>
+        <td ng-model="openclient[0].name">{{openclient[0].name}}</td>
+        <td><select ng-model="currentfye" ng-options="m  as (m | date: 'MM-dd-yyyy') for m in  openclientfyes"  ></select> </td>
+        <td> <button type="button" class="btn btn-default btn-sm" ng-click="setCurrentFye(currentfye)">
+        <span class="glyphicon glyphicon-cog"></span> Set</button> </td>
+        </tr>
+       </tbody>
+      </table>
+    </div>
+ </div>
+</div>
+</div>

@@ -1,0 +1,16 @@
+<div style="margin-top:-50px" ng-class="main" class="container container-fluid col-sm-10">
+  <div  class="page-header">
+   <h1  >Welcome to Trial Balance Express &nbsp;<small>version 1</small></h1>
+  </div>
+   <div class="panel-group">
+     <div class="panel panel-primary">
+      <div class="panel-heading">Client Information &nbsp;<span class="glyphicon glyphicon-home" /></div>
+       <div class="panel-body">
+       <h4>Client Name:</h4><p ng-model="openclient[0].name"><small>{{openclient[0].name}}</small></p>
+       <h4>Fiscal Year End:</h4><p ng-model="currentfye"><small>{{currentfye | date: mm-dd-yyyy}} </small></p>
+       </div>
+     </div>
+   </div>
+   <span>{{ajeList[0]}}</span>
+   <span>{{ajeList[1]}}</span>
+ </div>

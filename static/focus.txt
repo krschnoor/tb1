@@ -1,0 +1,47 @@
+app.directive('focus', function() {
+  return {
+    restrict: 'A',
+    link: function($scope,elem,attrs) {
+    
+      elem.bind('keydown', function(e) {alert(9)
+        var code = e.keyCode || e.which;
+        if (code === 13) {
+          e.preventDefault();
+          elem.parent("td").next().find("input").focus(); 
+        }
+      });
+    }
+  }
+});
+
+app.directive('nextRowOnEnter', function () {
+    return {
+        restrict: 'A',
+        link: function ($scope, selem, attrs) {
+            selem.bind('keydown', function (e) {alert(19)
+                var code = e.keyCode || e.which;
+                if (code === 13) {
+                    e.preventDefault();
+                    var pageElems = document.querySelectorAll('input, select'),
+                        elem = e.srcElement
+                        focusNext = false,
+                        len = pageElems.length;
+                    for (var i = 0; i < len; i++) {
+                        var pe = pageElems[i];
+                        if (focusNext) {
+                            if (pe.style.display !== 'none') {
+                                pe.focus();
+                                break;
+                            }
+                        } else if (pe === e.srcElement) {
+                            focusNext = true;
+                        }
+                    }
+                }
+            });
+        }
+    }
+})
+https://stackoverflow.com/questions/18091672/pass-element-to-angular-directive
+
+ebt krschnoo 556655

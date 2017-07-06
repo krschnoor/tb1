@@ -1,0 +1,234 @@
+
+<div style="margin-top:-20px" ng-class="main" class="container container-fluid col-sm-12">
+   <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3>Classified Trial Balance as of &nbsp;
+        <span ng-model="currentfye" >{{currentfye}} </span>
+        </h3>
+        </div>
+       <div class="panel-body">
+        <span ng-model="openclient" >{{openclient[0].name}}</span> <br/>
+        <table class="table table-responsive">
+        <thead>
+        <tr>
+        <th class="col-xs-2">Account</th>
+        <th class="col-xs-1 text-center">Unadj. Balance</th>
+        <th class="col-xs-1 text-center" >Dr</th>
+        <th class="col-xs-1 text-center">Cr</th>
+        <th class="col-xs-1 text-center">Adjusted Balance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td><h4>Current Assets</h4></td></tr>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'CurrentAsset'} | orderBy : 'ssort' "   >
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalanceAssets(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         
+         <tr style="background-color:aquamarine">
+         <td><table><tr><td><strong>&nbsp;Sub Total Current Assets</strong></td></tr></table></td>
+         <td ><table><tr><td width='100' align='right'>{{subUnadj('CurrentAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subDebits('CurrentAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subCredits('CurrentAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right' >{{subAdj('CurrentAsset') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr>
+          
+         <hr>
+         <hr>
+         <tr><td><h4>Fixed Assets</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'FixedAsset'} ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalanceAssets(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr style="background-color:aquamarine">
+         <td><table><tr><td><strong>&nbsp;Sub Total Fixed Assets</strong></td></tr></table></td>
+         <td ><table><tr><td width='100' align='right'>{{subUnadj('FixedAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subDebits('FixedAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subCredits('FixedAsset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right' >{{subAdj('FixedAsset') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr>
+
+         <hr>
+         <hr>
+         <tr><td><h4>Other Assets</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'Other Assets'} ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalanceAssets(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr style="background-color:aquamarine">
+         <td><table><tr><td><strong>&nbsp;Sub Total Other Assets</strong></td></tr></table></td>
+         <td ><table><tr><td width='100' align='right'>{{subUnadj('Other Assets') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subDebits('Other Assets') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{subCredits('Other Assets') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right' >{{subAdj('Other Assets') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+
+        <tr style="background-color:aquamarine">
+         <td><table><tr><td><strong>&nbsp;Total Assets</strong></td></tr></table></td>
+         <td ><table><tr><td width='100' align='right'>{{TotalUnadj('Asset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{TotalDebit('Asset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right'>{{TotalCredit('Asset') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td width='100' align='right' >{{TotalAdj('Asset') | number: 2}}</td> </tr></table></td>
+
+
+         </tr>
+
+         
+
+
+         </tbody>
+         </table>
+         </div>
+        <hr/>
+        <h1>Other Assets</h1>
+        <div  class='row' ng-repeat="account in accounts |  filter : {'class' : 'Other Assets' }">
+        <div class='row' ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear }  ">
+        <span class="col-sm-4" ng-click='setAccount(account)'>{{account.name}}</span>
+        <span class="col-sm-2">{{balance.unadjbal | number:2}}</span>
+        <span class="col-sm-2">{{balance.entries[0] | number:2}}</span>
+        <span class="col-sm-2">{{balance.adjbal | number:2}}</span>
+        </div>
+        </div>
+        <hr/>
+
+        <h1>Current Liabilities</h1>
+        <div  class='row' ng-repeat="account in accounts |  filter : {'class' : 'CurrentLiability' }">
+        <div class='row' ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear }  ">
+        <span class="col-sm-4" ng-click='setAccount(account)'>{{account.name}}</span>
+        <span class="col-sm-2">{{balance.unadjbal | number:2}}</span>
+        <span class="col-sm-2">{{balance.entries[0] | number:2}}</span>
+        <span class="col-sm-2">{{balance.adjbal | number:2}}</span>
+        </div>
+        </div>
+        <hr/>
+        <hr/>
+        <h1>Long Term Debt</h1>
+        <div  class='row' ng-repeat="account in accounts |  filter : {'class' : 'LongTermLiability' }">
+        <div class='row' ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear }  ">
+        <span class="col-sm-4" ng-click='setAccount(account)'>{{account.name}}</span>
+        <span class="col-sm-2">{{balance.unadjbal | number:2}}</span>
+        <span class="col-sm-2">{{balance.entries[0] | number:2}}</span>
+        <span class="col-sm-2">{{balance.adjbal | number:2}}</span>
+        </div>
+        </div>
+        <hr/>
+        <hr/>
+        <h1>Equity</h1>
+        <div  class='row' ng-repeat="account in accounts |  filter : {'class' : 'Equity' }">
+        <div class='row' ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear }  ">
+        <span class="col-sm-4" ng-click='setAccount(account)'>{{account.name}}</span>
+        <span class="col-sm-2">{{balance.unadjbal | number:2}}</span>
+        <span class="col-sm-2">{{balance.entries[0] | number:2}}</span>
+        <span class="col-sm-2">{{balance.adjbal | number:2}}</span>
+        </div>
+        </div>
+        <hr/>
+        <hr/>
+        <div>
+        <span ng-model='currentAccount' >Name of account:&nbsp;{{currentAccount.name}}</span></br>
+        <span ng-model='currentAccount' >Class:<nbsp/>{{currentAccount.class}}</span></br>
+        <span ng-model='currentAccount' >Financial Statement:<nbsp>{{currentAccount.fs}}</span></br>
+        <span ng-model='currentAccount' >Account Type:<nbsp/>{{currentAccount.subtype}}</span></br>
+        <span ng-model='currentAccount' >Class Sort:<nbsp>{{currentAccount.csort}}</span></br>
+        <span ng-model='currentAccount' >Sub Type Sort:<nbsp>{{currentAccount.ssort}}</span></br>
+        <span ng-model='currentAccount' >Balances:<nbsp>{{currentAccount.balances[0]}}</span></br>
+
+       </div>
+      </div>
+    </div>
+  </div>
+
+
+

@@ -1,0 +1,42 @@
+| filter : { balances: [{fye: currentfye}]}
+
+| filter : { balances: [{tbyear: '2017' }]} 
+
+
+= new Date()
+  $scope.currenttbyear = $scope.currentfye.getYear() 
+  $scope.currenttbday = $scope.currentfye.getDate()
+  $scope.currenttbmonth = $scope.currentfye.getMonth()
+
+| filter : { balances: [{tbyear: currenttbyear }]} ]}
+
+
+
+
+// add new balance object
+
+   var collection = db.collection('accounts');
+
+    collection.findOne({name:"Cash"},function(err, account) {
+    //console.log(account.balances.length)
+      account.balances.push({tbmonth:12,tbday:31,tbyear:2018,unadjbal:789000,entries:[],adjbal:0})
+      for(ctr = 0;ctr <account.balances.length;ctr++)
+        { 
+        if(account.balances[ctr].tbyear == 2018)
+          {console.log("lpppppp");
+         account.balances[ctr].unadjbal = 6780000}
+       }
+
+         
+         collection.save(account,{w:1},function(err,results){console.log(results)})
+      
+  // console.log(account)
+
+   db.close()
+    
+    
+  })
+| filter : { balances: [{tbmonth: currenttbmonth}] } | filter : { balances: [{tbmonth: currenttbmonth}] }
+
+
+https://scotch.io/tutorials/mean-app-with-angular-2-and-the-angular-cli
