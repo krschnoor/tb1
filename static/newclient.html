@@ -1,23 +1,29 @@
+<div class="container container-fluid col-sm-10">
+<div class="panel-group">
+ <div class="panel panel-primary">
+  <div class="panel-heading">New Client</div>
+   <div class="panel-body">
+      <div class="container" ng-controller="TBcontroller" >
+      <form name="clientform" ng-submit="addClient();$parent.setContent('start.html');">
+          <div class="form-group form-group-sm col-xs-3" ng-class="{'has-error' : clientform.clientname.$invalid && clientform.clientname.$dirty}">
+            <label for="clientname">Client Name</label>
+            <input width="300" name="clientname" ng-pattern="/^[a-zA-Z0-9]*$/" ng-required="true" ng-model="newclient.name" type="text" class="form-control" id="clientname" placeholder="Enter Client Name">
+          <span class="error-message" ng-show="clientform.clientname.$dirty && clientform.clientname.$error.required">Client Name is Required</span>
+          <span class="error-message" ng-show="clientform.clientname.$dirty && clientform.clientname.$error.pattern">No White Spaces or Special Characters</span>
+          </div>
+          <div class="form-group form-group-sm col-xs-3" ng-class="{'has-error' : clientform.fye.$invalid && clientform.fye.$dirty}">
+            <label for="fye">Fiscal Year End</label>
+            <input width="300" name="fye" ng-required="true" ng-model="newclient.fye" type="date" class="form-control" id="fye" placeholder="Enter Fiscal Year End name">
+          <span class="error-message" ng-show="clientform.fye.$dirty && clientform.fye.$error.required">Client Name is Required</span>
+          </div> <br/>
+          
+          <button type="submit" ng-disabled="clientform.$invalid"  class="btn btn-primary">Submit</button>
+        </form>
 
-
-
-<div class="container" ng-controller="TBcontroller" >
- <form name="clientform" ng-submit="addClient();$parent.setContent('start.html');">
-    <div class="form-group form-group-sm col-xs-3" ng-class="{'has-error' : clientform.clientname.$invalid && clientform.clientname.$dirty}">
-      <label for="clientname">Client Name</label>
-      <input width="300" name="clientname" ng-pattern="/^[a-zA-Z0-9]*$/" ng-required="true" ng-model="newclient.name" type="text" class="form-control" id="clientname" placeholder="Enter Client Name">
-    <span class="error-message" ng-show="clientform.clientname.$dirty && clientform.clientname.$error.required">Client Name is Required</span>
-    <span class="error-message" ng-show="clientform.clientname.$dirty && clientform.clientname.$error.pattern">No White Spaces or Special Characters</span>
-     </div>
-    <div class="form-group form-group-sm col-xs-3" ng-class="{'has-error' : clientform.fye.$invalid && clientform.fye.$dirty}">
-      <label for="fye">Fiscal Year End</label>
-      <input width="300" name="fye" ng-required="true" ng-model="newclient.fye" type="date" class="form-control" id="fye" placeholder="Enter Fiscal Year End name"fye">
-     <span class="error-message" ng-show="clientform.fye.$dirty && clientform.fye.$error.required">Client Name is Required</span>
-    </div> <br/>
-    
-    <button type="submit" ng-disabled="clientform.$invalid"  class="btn btn-primary">Submit</button>
-  </form>
-
+      </div>
+   </div>
+ </div>
+</div>
 </div>
 
 

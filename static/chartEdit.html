@@ -1,0 +1,46 @@
+<div style="font-size:x-small;margin-top:-20px; width: 100%;height: 100vh; min-height:100vh; overflow-y: auto" ng-class="main" class="container container-fluid col-sm-12" autoscroll="true">
+   <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3>Chart of Accounts</h3>
+        <span ng-model="currentfye" >{{currentfye | date: mmm-dd-yyyy}} </span>
+        <span ng-model="openclient" >{{openclient[0].name}}</span> <br/>
+        </h3>
+      </div>
+       <div class="panel-body">
+         <form name="chartForm" ng-submit="postChart();" novalidate>
+         <button style="margin:8px" type="submit" class='btn btn-prmimary' ng-disabled="chartForm.$invalid || getChartBegBalances()!=0 || chartForm.$pristine">Update</button>
+         <button style="margin:8px" type="button" ng-click="$parent.setContent('start.html')" class='btn btn-default' >Cancel</button>
+�       <div class="form-group col-xl-12" ng-class="{'has-error' : chartFormSort.ssort.$error.required}">
+         <table class="table table-responsive" style="border-collapse:collapse;" >
+         <thead>
+         <tr><td/><td/><td/><td align="right" >Chart Totals:</td><td align="center"><span class="text-right" >{{getChartBegBalances() | number: 2}}</span></td></tr>
+         <tr style="background-color:#000;color:#fff">
+         <th   class="col-xs-3">Account</th>
+         <th   class="col-xs-1 text-left" >Class</th>
+         <th   class= "col-xs-3 text-left">Sub-Type</th>
+         <th   class= "col-xs-2 text-left">Sub-Sort</th>
+         <th  style="width:60px;word-wrap:break-word"  class="col-md-4 text-left">Unadjusted Balance</th>
+         </tr>
+         </thead>
+         <tbody>
+          <tr ng-repeat="account in accounts  |  orderBy : ['fs' , 'csort' ]"   >
+            
+           <td>{{account.name}}</td>
+           <td>{{account.class}}</td>
+           <td>{{account.subtype}}</td>
+           
+           <td><input name="ssort" required ng-required="true" focus class="text-right col-lg-8" type="number" ng-model="account.ssort"  /></td>
+          
+           <td    ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+           <input name="unadjbal"  class="text-right col-lg-10" type="number" ng-model="balance.unadjbal"  /></td>
+           </ng-form>
+           </tr>
+          </tbody>
+          </table>
+          </div>
+          </form>
+         </div>
+      </div> 
+   </div>
+</div>

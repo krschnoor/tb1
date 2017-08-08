@@ -1,0 +1,42 @@
+<div class="container container-fluid col-lg-12">
+<div class="panel-group" ng-controller="TBcontroller">
+ <div class="panel panel-primary " >
+  <div class="panel-heading">Edit Journal Entry<span class="text-left ">  
+   
+  </div>   
+   <div class="panel-body">
+    <form name="ajeEditform" ng-submit="$parent.postAjeEdit();" novalidate>
+�   <div class="form-group " ng-class="{'has-error' : ajeEditform.$invalid}">
+    <span class="text-left" ><button  style="margin-bottom:10px" name="post"  type="submit" ng-disabled="ajeEditform.$invalid || totalAjeEditDr()!=totalAjeEditCr() || ajeEditform.$pristine"  type="button" class="btn btn-primary">Update</button><span>
+    <span><button  style="margin-bottom:10px" ng-click="$parent.setContent('start.html')" type="button" class="btn btn-default">Cancel</button></span> 
+    <table  class="table table-bordered table-condensed table-fixed">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Description</th>
+        <th>Debit</th>
+        <th>Credit</th>  
+        <th>-</th>  
+        <th>+</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="1"></td><td><strong class="text-right">Totals:</strong></td><td class="text-right">{{ $parent.totalAjeEditDr() | number: 2}}</td><td class="text-right">{{ $parent.totalAjeEditCr() | number: 2}}</td><td/><td/></tr>
+      <tr class="form-inline" ng-repeat="entry in $parent.ajeEdit">
+        <td><select  style="font-size:smaller" focus ng-attr-id="{{ 1}}"  ng-required="true" class="input-large" ng-model="entry.accountID" ng-options="m._id  as m.name  for m in  accounts | orderBy: ['fs', 'csort', 'ssort']"  ></select> </td>
+        <td ><input  focus ng-attr-id="{{ 2 }}"   type="text" ng-model="entry.desc" /></td>
+        <td ><input  focus ng-attr-id="{{ 3 }}"  ng-pattern="/^[0-9]+([,.][0-9]+)?$/" class="input-mini text-right" ng-validate="number" type="number" ng-model="entry.debit" placeholder="" /></td>
+        <td ><input nextrow ng-attr-id="{{ 'input-' + $index }}" focus ng-keyDown="$parent.addAjeEditRow($index,$event.keyCode,$event)" ng-pattern="/^[0-9]+([,.][0-9]+)?$/" class="input-mini text-right" ng-validate="number" type="number" ng-model="entry.credit" /></td>
+        <td class="text-center"><span  ng-click="deleteLine($index)" class="glyphicon glyphicon-trash"></span></td>
+        <td class="text-center"><span  ng-click="addLine($index)" class="glyphicon glyphicon-plus"></span></td> 
+       </tr>
+    
+    </tbody>
+  </table>
+  </div>
+ </form>
+</div>
+
+ </div>
+</div>
+ </div>

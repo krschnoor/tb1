@@ -1,0 +1,75 @@
+<div style="font-size:smaller;margin-top:-20px;width: 100%; height: 86vh; min-height:86vh; overflow-y: auto" ng-class="main" class="container container-fluid col-sm-12" autoscroll="true">
+   <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3>Standard Trial Balance: &nbsp;
+        <span ng-model="currentfye" >{{currentfye | date: mmm-dd-yyyy}} </span>
+        </h3>
+      </div>
+        <div class="panel-body">
+        <span ng-model="openclient" >{{openclient[0].name}}</span> <br/>
+        <table class="table table-responsive" style="border-collapse:collapse" >
+        <thead>
+        <tr style="background-color:#000;color:#fff">
+        <th   class="col-xs-2">Account</th>
+        <th   class="col-xs-1 text-left">Unadj. Balance</th>
+        <th   class="col-xs-1 text-left" >Adjustments</th>
+        <th   class="col-xs-1 text-left">Adjusted Balance</th>
+        </tr>
+        </thead>
+        <tbody>
+         <tr ng-repeat="account in accounts |  orderBy : ['fs' , 'csort','ssort' ] " ng-init="showDetail==true" >'
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table ng-init="showDetail=false">
+         <tr>
+         <td  width='100' align='right' ><span> {{getSumAdjustments(account)  | number:2}}</td>
+        <td>
+        &nbsp;
+        <span style="cursor:pointer" ng-show='getSumAdjustments(account)!=null && showDetail==false' class="glyphicon glyphicon-plus" ng-click="showDetail=!showDetail" ></span></span>
+        <span style="cursor:pointer" ng-show='getSumAdjustments(account)!=null && showDetail==true' class="glyphicon glyphicon-minus" ng-click="showDetail=!showDetail" ></span></span>
+        </td>
+         
+         </tr>
+         <tr>
+         <td>
+         <table ng-show="showDetail==true">
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>
+         <span ng-if='entry.debit !=0 '>Dr: &nbsp;{{entry.debit | number:2}}</span>
+         <span ng-if='entry.credit !=0 '>Cr: &nbsp;{{entry.credit | number:2}}</span>
+         </td>
+         </tr>
+         </table>
+         </td>
+         </tr>
+         </table>
+         </td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         </tr>
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td valign="top"><strong><h6>Trial Balance Totals:</h6></strong></td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid #4393c1 .1em" width='100' align='right'>{{getTotalsUnadjAll() | number:2}} </td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid #4393c1 .1em" width='100' align='right'>{{getTotalsEntriesAll() | number:2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid #4393c1 .1em" width='100' align='right'>{{getTotalsAdjAll() | number: 2}}</td></tr></table></td>
+         </tr>
+         </tbody>
+         </table>
+         </div>
+      
+       </div>
+      </div>   
+         

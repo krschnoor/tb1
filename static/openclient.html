@@ -3,6 +3,7 @@
  <div class="panel panel-primary">
   <div class="panel-heading">Open Client</div>
    <div class="panel-body">
+  <form name="openClientForm">
     <table class="table table-condensed">
       <thead>
        <tr>
@@ -14,12 +15,14 @@
        <tbody>
         <tr>
         <td ng-model="openclient[0].name">{{openclient[0].name}}</td>
-        <td><select ng-model="currentfye" ng-options="m  as (m | date: 'MM-dd-yyyy') for m in  openclientfyes"  ></select> </td>
-        <td> <button type="button" class="btn btn-default btn-sm" ng-click="setCurrentFye(currentfye)">
+        <td><select name="clientSelect" required ng-model="currentfye" ng-options="m  as (m | date: 'MM-dd-yyyy') for m in  openclientfyes"  ></select> </td>
+        <td><button type="button" class="btn btn-default btn-sm" ng-click="setCurrentFye(currentfye)" ng-disabled="openClientForm.$invalid">
         <span class="glyphicon glyphicon-cog"></span> Set</button> </td>
+        <td><span class="error-message" ng-show="openClientForm.clientSelect.$error.required && openClientForm.clientSelect.$dirty">Fiscal Year is Required</span></td>
         </tr>
        </tbody>
       </table>
+    </form>
     </div>
  </div>
 </div>

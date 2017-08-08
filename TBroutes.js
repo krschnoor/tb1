@@ -16,11 +16,14 @@ app.get('/client/get',clients.getClient);
 app.get('/clientinfo/get',clients.getClientInfo);
 app.get('/accounts/get',accounts.getAccounts);
 app.post('/newclient',client.addClient);
+app.post('/adjBalances',accounts.updateChart);
 //app.post('/newclient/addInfo',client.addClientInfo);
 //app.post('/newclient/addEntry',client.addEntries);
+app.post('/newAccount',accounts.addAccount);
 app.post('/newEntry',entry.addEntry);
+app.post('/newEntryEdit',entry.addEntryEdit);
 app.get('/ajes/get',entry.getAjes);
-
+app.get('/aje/get',entry.getAje);
 
 }
 

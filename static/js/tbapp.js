@@ -53,7 +53,7 @@ app.directive('nextrow', function () {
 
 
 
-app.controller('TBcontroller', ['$scope','$http','$location','$timeout',function($scope,$http,$location,$timeout){
+app.controller('TBcontroller', ['$scope','$http','$location','$timeout','ajeservice',function($scope,$http,$location,$timeout,ajeservice){
 
   $scope.accounts;
   $scope.currentAccount;
@@ -64,331 +64,175 @@ app.controller('TBcontroller', ['$scope','$http','$location','$timeout',function
   $scope.openclientfyes = [];
   $scope.ajeList 
   
+
+  $scope.ajeEdit 
   
-
-  $scope.aje = [{accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""},
-  {accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""},
-  {accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""},
-  {accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""}]
-
-  $scope.postAje = function()
-  {
-   for(var ctr=0;ctr<$scope.aje.length;ctr++)
-    { var obj = $scope.aje[ctr]
-     $scope.ajeList.push(obj)}
    
+
+  $scope.postAjeEdit = function(){
+
+   ajeservice.postAjeEdit($scope)
+  
+  }
+   
+
+  $scope.postAje = function() {
+            
    if($scope.ajeform.$valid){
-   
-
-   
-   $http.post('/newEntry/',{entry:$scope.aje,client:$scope.openclient[0].name})
-   .success(function(data,status,headers,config){
-  
-    
-    $scope.clearAje()  
-
-    })
-   .error(function(data,status,headers,config){ })
-   
-   }}
-    
-
- $scope.clearAje = function()
-  {
-
-  
-    
-      for(var ctr=$scope.aje.length-1;ctr>=0;ctr--)
-      { $scope.aje.splice([ctr],1)}
-     
-      $scope.aje.splice(0, 0,{accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""});
-      $scope.aje.splice(0, 0,{accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""});
-      $scope.aje.splice(0, 0,{accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""});
-      $scope.aje.splice(0, 0,{accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""});
+   ajeservice.postAje($scope)}
 
   }
-  
-
-  
-  $scope.deleteLine = function(index){
-  $scope.aje.splice(index,1); }
- 
-  $scope.addLine = function(index){
-  $scope.aje.splice(index, 0,{accountID:"",tbdate:$scope.currentfye,desc:"",debit:0,credit:0});}
-  
-
-
-   $scope.totalAjeDr = function(){
-    var total = 0 
-    for(ctr=0;ctr<$scope.aje.length;ctr++)
-    { total += parseFloat($scope.aje[ctr].debit) || 0}
-    return (total) }   
-
-   $scope.totalAjeCr = function(){
-    var total = 0 
-    for(ctr=0;ctr<$scope.aje.length;ctr++)
-    { total += parseFloat($scope.aje[ctr].credit) || 0}
-    return (total) }   
-
-    $scope.addAjeRow = function(index,keycode,$event)
-    {$scope.clickedElement = $event.currentTarget.getAttribute("id");
-    if(index==$scope.aje.length-1 && keycode ==13){
-    $scope.aje.push({accountID:"",tbdate:$scope.currentfye,desc:"",debit:"",credit:""})}}
     
 
+$scope.printToCart = function(printSectionId) {
+        var innerContents = document.getElementById(printSectionId).innerHTML;
+        var popupWinindow = window.open('', '_blank', 'width=600,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+        popupWinindow.document.open();
+        popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+        popupWinindow.document.close();
+      }
 
 
-    $scope.getAdjustedBalanceAssets = function(acct) {
- 
-    var balArr =  acct.balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&           (balance.tbday == $scope.currenttbday) && (balance.tbmonth == $scope.currenttbmonth)) })
 
+  
+
+   $scope.addAccount = function(cat,cls,sub,ssort,name){
    
-    var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==acct._id) && (aje.tbdate ==             $scope.currentfye)) })
-  
+   var csort, fs;
+   
 
-      var adjBal = 0;
+    if(cls=='CurrentAsset'){
+      csort = 1;
+      fs = 1 }
 
-      for(var ctr=0; ctr< entriesArr.length;ctr++) {
-    
-         if(acct.category=='Asset'){
-         adjBal +=  parseFloat(entriesArr[ctr].debit) || 0 ; 
-         adjBal -= parseFloat(entriesArr[ctr].credit) || 0;}
-         else{
-         adjBal -=  parseFloat(entriesArr[ctr].debit) || 0 ; 
-         adjBal += parseFloat(entriesArr[ctr].credit) || 0;}
+    else if(cls=='FixedAsset'){
+      csort = 2;
+      fs = 1
+    }
+
+   else if(cls=='Other Assets'){
+      csort = 3;
+      fs = 1
+    }
+
+   else if(cls=='CurrentLiability'){
+      csort = 4;
+      fs = 1
+    }
+
+    else if(cls=='LongTermLiability'){
+      csort = 5;
+      fs = 1
+    }
+
+    else if(cls=='Equity'){
+      csort = 6;
+      fs = 1
+    }
+
+   else if(cls=='Sales'){
+      csort = 1;
+      fs = 2
+    }
+
+  else if(cls=='Fees'){
+      csort = 1;
+      fs = 2
+    }
+
+  else if(cls=='CostOfGoodsSold'){
+      csort = 2;
+      fs = 2
+    }
+
+  else if(cls=='SellingExpenses'){
+      csort = 3;
+      fs = 2
+    }
+
+
+ else if(cls=='GeneralExpenses'){
+      csort = 4;
+      fs = 2
+    }
+
+  else if(cls=='OtherIncome'){
+      csort = 5;
+      fs = 2
+    }
+
+  else if(cls=='OtherExpense'){
+      csort = 6;
+      fs = 2
+    }
+
+
+
+    var tbday = $scope.currenttbday;
+    var tbmonth = $scope.currenttbmonth;
+    var tbyear = $scope.currenttbyear;
+
+
+
+
+    var acct = {
+              name:name,
+              category:cat,
+              class: cls,
+              subtype:sub, 
+              csort: parseInt(csort),
+              ssort: parseInt(ssort),
+              fs:fs, 
+              balances:[{tbmonth:tbmonth,tbday:tbday,tbyear:tbyear,unadjbal:0,entries:[],adjbal:0}]
+              }
+
         
+   $http.post('/newAccount/',{account:acct,client:$scope.openclient[0].name})
+   .success(function(data,status,headers,config){
+   alert("Account " + name + " Created Successfully.")
+   $scope.accounts.push(data[0]);
+   $scope.setContent('start.html');
+   })
+  
+   
+  
+}
+
+
+
+ $scope.getChartBegBalances = function(){
+ 
+  var totUnadj = 0
+ 
+   for(var ctr = 0;ctr<$scope.accounts.length;ctr++){
+
+   var balArr = $scope.accounts[ctr].balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&  (balance.tbday == $scope.currenttbday) 
+     && (balance.tbmonth == $scope.currenttbmonth)) })
+ 
+     if($scope.accounts[ctr].category=="Asset" || $scope.accounts[ctr].category=='Expense' || $scope.accounts[ctr].category=='CostOfGoodsSold'){
+       totUnadj += balArr[0].unadjbal}
+       else{
+         totUnadj -= balArr[0].unadjbal
        }
-
-      adjBal +=  balArr[0].unadjbal     
-
-    return adjBal 
-
-   }
-   
-
-$scope.subAdj = function(type){
-    
-      
-      var adjBal = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.class==type})
-      
-        for(ctr=0;ctr<filtered.length;ctr++){
-         
-         var balArr = filtered[ctr].balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&  (balance.tbday == $scope.currenttbday) && (balance.tbmonth == $scope.currenttbmonth)) })
-        
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate ==$scope.currentfye)) })       
-        
-          for(var ctr2=0;ctr2<entriesArr.length;ctr2++){
-
-            if(filtered[ctr].category=='Asset'){
-             adjBal +=  parseFloat(entriesArr[ctr2].debit) || 0 ; 
-             adjBal -= parseFloat(entriesArr[ctr2].credit) || 0;}
-            else{
-            adjBal -=  parseFloat(entriesArr[ctr2].debit) || 0 ; 
-            adjBal += parseFloat(entriesArr[ctr2].credit) || 0;}
-         
-          }     
-          
-         adjBal += balArr[0].unadjbal
-         
-        }
-
-           
-      return adjBal 
-
-    }
-
-
-
-
-
-$scope.subUnadj = function(type){
-    
-      
-      var unadjBal = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.class==type})
-       
-        for(ctr=0;ctr<filtered.length;ctr++){
-         
-         var balArr = filtered[ctr].balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&  (balance.tbday == $scope.currenttbday) && (balance.tbmonth == $scope.currenttbmonth)) })
-          
-          unadjBal += balArr[0].unadjbal
-         
-        }
-
-           
-      return unadjBal 
-
-    }
-
-
-
-   $scope.subDebits = function(type){
-    
-      var debits = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.class==type})
-       
-        for(ctr=0;ctr<filtered.length;ctr++){
-         
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate == $scope.currentfye)) })
-          
-           for(ctr2=0;ctr2<entriesArr.length;ctr2++){
-            debits += parseFloat(entriesArr[ctr2].debit) || 0
-           }
-          
-         
-        }
-
-           
-      return debits
-
     
 
-   }
+     }
+
+  return parseFloat(totUnadj) || 0
+
+}
 
 
-$scope.subCredits = function(type){
-    
-      var credits = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.class==type})
-       
-        for(ctr=0;ctr<filtered.length;ctr++){
-         
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate == $scope.currentfye)) })
-          
-           for(ctr2=0;ctr2<entriesArr.length;ctr2++){
-            credits += parseFloat(entriesArr[ctr2].credit) || 0
-           }
-          
-         
-        }
+$scope.postChart = function(){
 
-           
-      return credits
-
-    }
-
-
-$scope.TotalUnadj = function(category){
   
-      var unadj = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.category==category})
-      
-        for(ctr=0;ctr<filtered.length;ctr++){
-         
-         var balArr = filtered[ctr].balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&  (balance.tbday == $scope.currenttbday) && (balance.tbmonth == $scope.currenttbmonth)) })
-        
-                  
-         unadj += balArr[0].unadjbal
-         
-        }
+  $http.post('/adjBalances/',{accounts:$scope.accounts,client:$scope.openclient[0].name})
+   .success(function(data,status,headers,config){
+   
+   $scope.setContent('start.html')})
+   $scope.setContent('start.html')
 
-           
-      return unadj 
-
-    }
-
-
-$scope.getTotalDrs = function(category){
-     
-     var totaldebit = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.category==category})
-      
-        for(var ctr=0;ctr<filtered.length;ctr++){
-         
-        
-        
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate ==$scope.currentfye)) })       
-        
-          for(var ctr2=0;ctr2<entriesArr.length;ctr2++){
-           
-              totaldebit += parseFloat(entriesArr[ctr2].debit) || 0;
-                          
-          }     
-          
-                
-        }
-
-           
-      return totaldebit
-    }
-
-
-
-$scope.getTotalCrs = function(category){
-    
-    
-      var totalcredit = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.category==category})
-      
-        for(var ctr=0;ctr<filtered.length;ctr++){
-         
-        
-        
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate ==$scope.currentfye)) })       
-        
-          for(var ctr2=0;ctr2<entriesArr.length;ctr2++){
-           
-              totalcredit += parseFloat(entriesArr[ctr2].credit) || 0;
-                          
-          }     
-          
-                
-        }
-
-           
-      return totalcredit
-
-    }
-
-
-$scope.TotalAdj = function(category){
-    
-      
-      var adjBal = 0;
-      
-      var filtered = $scope.accounts.filter(function(account){ return account.category==category})
-      
-        for(var ctr=0;ctr<filtered.length;ctr++){
-         
-         var balArr = filtered[ctr].balances.filter(function(balance){ return ((balance.tbyear == $scope.currenttbyear) &&  (balance.tbday == $scope.currenttbday) && (balance.tbmonth == $scope.currenttbmonth)) })
-        
-         var entriesArr = $scope.ajeList.filter(function(aje){ return ((aje.accountID==filtered[ctr]._id) && (aje.tbdate ==$scope.currentfye)) })       
-        
-          for(var ctr2=0;ctr2<entriesArr.length;ctr2++){
-
-            if(filtered[ctr].category=="Asset"){
-              
-             adjBal +=  parseFloat(entriesArr[ctr2].debit) || 0 ; 
-             adjBal -= parseFloat(entriesArr[ctr2].credit) || 0;}
-             
-            else{
-            adjBal -=  parseFloat(entriesArr[ctr2].debit) || 0 ; 
-            adjBal += parseFloat(entriesArr[ctr2].credit) || 0;}
-         
-          }     
-          
-         adjBal += parseFloat(balArr[0].unadjbal) || 0
-         
-        }
-
-           
-      return adjBal 
-
-    }
-
-
-
-
-
-
+  }
 
 
 
@@ -406,8 +250,18 @@ $scope.TotalAdj = function(category){
   $scope.content;
   
     
-  $scope.setContent = function(page)
-  {$scope.content = '/static/' +   page}
+  $scope.setContent = function(page){ 
+     
+     if(page=='aje.html' || page =='ajeedit.html'){
+       setJournalEntry($scope)
+      }
+     if(page=='classBalanceSheet.html' || page=='classIncomeStatement.html'
+      || page=='standardTrialBalance.html'){
+      setReports($scope)
+     }
+ 
+      $scope.content = '/static/' +   page
+  }
 
  
  $scope.addClient = function() {
@@ -456,7 +310,7 @@ $scope.TotalAdj = function(category){
    $scope.accounts = data
    $scope.getClientInfo(name)
    $scope.getAjes(name)
-   $scope.postAje()
+   //$scope.postAje()
    
    }).error(function(data,status,headers,config){    })
  
@@ -477,15 +331,30 @@ $scope.TotalAdj = function(category){
 }
 
 
-
+ 
  $scope.getAjes = function(name){
   $http.get('/ajes/get',{params:{db:name}}).success(function(data,status,headers,config){
-  $scope.ajeList = data;
-  $scope.$apply();
+    
+  
+  $scope.ajeList = data;  
+
+
+      }).error(function(data,status,headers,config){   })
+
+  }
+
+
+  $scope.getAje = function(name,id){
+  $http.get('/aje/get',{params:{db:name, id:id}}).success(function(data,status,headers,config){
+  
+   
+   $scope.ajeEdit = data
+   console.log(data)
+   $scope.setContent('ajeedit.html')
+   
     }).error(function(data,status,headers,config){   })
 
-}
-
+  }
 
   }])
    

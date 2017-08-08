@@ -1,0 +1,177 @@
+<div style="margin-top:-20px" ng-class="main" class="container container-fluid col-sm-10" ng-controller="TBcontroller">
+<div class="panel-group">
+  <div class="panel panel-primary">
+   <div class="panel-heading">New Account</div>
+    <div class="panel-body">
+    
+     <form  ng-init="cls='';category='';sub='';ssort='1';name=''" name="addAccountForm" ng-submit="$parent.addAccount(category,cls,sub,ssort,name)" >
+     <div style="margin-bottom:5px;border-bottom: solid blue .05em; " class="row">
+     <span><button style="margin-bottom: 20px;margin-left:5px" type="submit" ng-disabled="addAccountForm.$invalid"  class="btn btn-primary">Submit</button>
+     <span><button style="margin-bottom: 20px;margin-left:5px" class="btn btn-default" ng-click="$parent.setContent('start.html')" >Cancel</button></span>
+    </div>
+     <div class="row">
+      <div class="form-group  col-sm-8" ng-class="{'has-error' : addAccountForm.input1.$invalid }">
+        <label class="col-sm-6" for="AccountCategory">Account Category:</label>
+        <select ng-change="sub=''; cls=''" class="col-sm-6" ng-required ng-model="category" name="AccountCategory">
+        <option value="Asset">Asset</option>
+        <option value="Liability">Liability</option>
+        <option value="Equity">Equity</option>
+        <option value="Revenue">Revenue</option>
+        <option value="Expense">Expense</option>
+
+        </select>
+         <input style="display:none" ng-model="category" class="form-control" id="input1" name="input1" type="text" required ng-required="true"  />
+         <span class="error-message" ng-show="addAccountForm.input1.$error.required">Category is Required</span>
+      </div>
+     </div>
+      <div class="row">
+       <div class="form-group  col-sm-8" ng-class="{'has-error' : addAccountForm.input2.$invalid }">
+        <label class="col-sm-6" for="AccountClass1">Account Class:</label>
+        <select class="col-sm-6" value="  " ng-show="category=='1' || category==''" ><option>Select Category</option></select>
+        <select class="col-sm-6"  ng-required="true"  ng-show="category=='Asset'" ng-model="cls" name="AccountClass1">
+        <option value="CurrentAsset">Current Asset</option>
+        <option value="FixedAsset">Fixed Asset</option>
+        <option value="Other Assets">Other Asset</option>
+        </select>
+        <select  class="col-sm-6"  ng-required="true"   ng-show="category=='Liability'" ng-model="cls" name="AccountClass1">
+        <option value="CurrentLiability">Current Liability</option>
+        <option value="LongTermLiability">Long Term Debt</option>
+        </select>
+        <select class="col-sm-6"   ng-required="true"  ng-show="category=='Equity'" ng-model="cls" name="AccountClass1">
+        <option value="Equity">Equity &nbsp; &nbsp;</option>
+        </select>
+         <select class="col-sm-6"   ng-required="true"  ng-show="category=='Revenue'" ng-model="cls" name="AccountClass1">
+         <option value="Sales">Sales &nbsp; &nbsp;</option>
+         <option value="Fees">Fees &nbsp; &nbsp;</option>
+         <option value="OtherIncome">Other Income &nbsp; &nbsp;</option>
+         </select>
+         <select class="col-sm-6"   ng-required="true"  ng-show="category=='Expense' || category=='CostOfGoodsSold'" ng-model="cls" name="AccountClass1">
+         <option value="CostOfGoodsSold">Cost of Goods Sold &nbsp; &nbsp;</option>
+         <option value="SellingExpenses">Selling Expense &nbsp; &nbsp;</option>
+         <option value="GeneralExpenses">General Expense &nbsp; &nbsp;</option>
+         <option value="OtherExpense">Other Expense &nbsp; &nbsp;</option>
+        </select>
+
+         <input style="display:none" ng-model="cls" class="form-control" id="input2" name="input2" type="text" ng-required="true"  />
+         <span class="error-message" ng-show="addAccountForm.input2.$error.required">Class is Required</span>
+    
+       </div>
+      </div>
+      <div class="row">
+       <div class="form-group  col-sm-8" ng-class="{'has-error' : addAccountForm.input3.$invalid }" >
+        <label class="col-sm-6" for="AccountSubClass1">Account Sub-Type:</label>
+        <select class="col-sm-6" value="  " ng-show="cls=='1' || cls==''" ><option>Select Class</option></select>
+        <select  class="col-sm-6 text-left" ng-show="cls=='CurrentAsset'" ng-model="sub" name="AccountSubClass1">
+        <option></option>
+        <option value="Cash">Cash</option>
+        <option value="Accounts Receivable">Accounts Receiavble</option>
+        <option value="Other Current Asset">Other Current Asset</option>
+        <option value="Other Receivables">Other Receivable</option>
+        <option value="Current Investments">Current Investments</option>
+        <option value="Inentory">Inventory</option>
+        </select>
+        <select  class="col-sm-6 text-left" ng-show="cls=='FixedAsset'" ng-model="sub" name="AccountSubClass2">
+        <option value="Equipment">Equipment</option>
+        <option value="Buildings">Buildings</option>
+        <option value="Depreciation">Depreciation</option>
+        </select>
+        <select  class="col-sm-6 text-left" ng-show="cls=='Other Assets'" ng-model="sub" name="AccountSubClass3">
+        <option value="Other Assets">Other Assets</option>
+        <option value="Intangible Assets">Intangible Assets</option>
+        </select>
+        <select  class="col-sm-6 text-left" ng-show="cls=='CurrentLiability'" ng-model="sub" name="AccountSubClass4">
+        <option value="Accounts Payable">Accounts Payable</option>
+        <option value="Loans Payable">Loans Payable</option>
+        <option value="Other Payables">Other Payables</option>
+        <option value="Payroll">Payroll Liabilities</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='LongTermLiability'" ng-model="sub" name="AccountSubClass5">
+        <option value="Loans Payable">Loans Payable</option>
+        <option value="Shareholder Loans Payable">Shareholder Loans Payable</option>
+        <option value="Other Long Term Payables">Other Long Term Payables</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='Equity'" ng-model="sub" name="AccountSubClass6">
+        <option value="Draws">Shareholder Draws</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='Sales'" ng-model="sub" name="AccountSubClass7">
+        <option value="Sales">Sales</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='Fees'" ng-model="sub" name="AccountSubClass8">
+        <option value="Fees">Fees</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='CostOfGoodsSold'" ng-model="sub" name="AccountSubClass9">
+        <option value="CostOfGoodsSold">Cost of Goods Sold</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='SellingExpenses'" ng-model="sub" name="AccountSubClass10">
+        <option value="Advertising">Advertising</option>
+        <option value="Wages">Wages</option>
+        <option value="Payroll Tax">Payroll Tax</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Commissions">Commissions</option>
+        <option value="Travel">Travel</option>
+        <option value="Insurance">Insurance</option>
+        <option value="Lodging">Lodging</option>
+        <option value="Meals">Meals</option>
+        <option value="Communications">Communications</option>
+        <option value="Supplies">Supplies</option>
+        <option value="Employee Benefits">Employee Benefits</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='GeneralExpenses'" ng-model="sub" name="AccountSubClass10">
+        <option value="Wages">Wages</option>
+        <option value="Payroll Taxes">Payroll Tax</option>
+        <option value="Insurance">Insurance</option>
+        <option value="Repairs">Repairs</option>
+        <option value="Supplies">Supplies</option>
+        <option value="Travel & Lodging">Travel & lodging</option>
+        <option value="Fuel">Fuel</option>
+        <option value="Small Tools">Small Tools</option>
+        <option value="Professional Fees">Professional Fees</option>
+        <option value="Dues & Subscriptions">Dues & Subscriptions</option>
+        <option value="Licenses & Permits">Licenses & Permits</option>
+        <option value="Other Taxes">Other Taxes</option>
+        <option value="Depreciation">Depreciation</option>
+        <option value="Employee Benefits">Employee benefits</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='OtherIncome'" ng-model="sub" name="AccountSubClass10">
+        <option value="Other Income">Other Income</option>
+        </select>
+        <select  class="col-sm-6" ng-show="cls=='OtherExpense'" ng-model="sub" name="AccountSubClass10">
+        <option value="Other Expense">Other Expense</option>
+        </select>
+
+         <input style="display:none" ng-model="sub" class="form-control" id="input3" name="input3" type="text" ng-required="true"  />
+         <span class="error-message" ng-show="addAccountForm.input3.$error.required">Sub-Type is Required</span>
+        </div>
+      </div>
+      <div class="row">
+       <div class="form-group  col-sm-8" ng-class="{'has-error' : addAccountForm.input3.$invalid }" >
+        <label class="col-sm-6" for="AccountSort">Account Sub-Type Sort:</label>
+        <select class="col-sm-6"  ng-model="ssort" >
+        <option value=1>1</option>
+        <option value=2>2</option>
+        <option value=3>3</option>
+        <option value=4>4</option>
+        <option value=5>5</option>
+        </select>
+       </div>
+      </div>
+     <div class="row">
+       <div class="form-group  col-sm-8" ng-class="{'has-error' : addAccountForm.input3.$invalid }" >
+        <div>
+        <label class="col-sm-6" for="name">Account Description:</label>
+        <input class="col-sm-6"  name='name' type="text" ng-model="name" ng-required="true" placeholder="Enter Account Name:"/>
+        <label class="col-sm-6"></label><span   class="error-message" ng-show="addAccountForm.input4.$error.required && addAccountForm.input4.$pristine">Account Name is Required</span>
+        </div>
+        <input  style="display:none" required ng-model="name" class="form-control" id="input4" name="input4" type="text" ng-required="true"  />
+     </div>
+    </div>
+
+
+
+     </form>
+    
+    
+    </div>
+  </div>
+ </div>
+</div>

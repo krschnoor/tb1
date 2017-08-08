@@ -1,0 +1,406 @@
+<div>
+
+<div id="classIncStmt" style="font-size:smaller;margin-top:-20px;width: 100%; height: 86vh; min-height:86vh; overflow-y: auto" ng-class="main" class="container container-fluid col-sm-12" autoscroll="true">
+   <div class="panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3>Classified Income Statement: &nbsp;
+        <span ng-model="currentfye" >{{currentfye | date: mmm-dd-yyyy}} </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class='no-print'><button ng-click="printToCart('classIncStmt')" class="btn btn-primary" >Print Report</button></span>
+         </h3>
+         </div>
+       <div class="panel-body">
+        <span ng-model="openclient" >{{openclient[0].name}}</span> <br/>
+        <table class="table table-responsive" style="padding:10px;border-collapse:collapse" >
+        <thead>
+        <tr style="background-color:#000;color:#fff">
+        <th   class="col-xs-2">Account</th>
+        <th   class="col-xs-1 text-left">Unadj. Balance</th>
+        <th   class="col-xs-1 text-left" >Dr</th>
+        <th   class= "col-xs-1 text-left">Cr</th>
+        <th   class="col-xs-1 text-left">Adjusted Balance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr><td colspan="5"><strong><h3 class="bg-info text-white px-2 py-2">Revenues</h3></strong></td></tr>
+        <tr><td><h4>Sales</h4></td></tr>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'Sales'} | orderBy : 'ssort' "   >
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong >&nbsp;Sub Total Sales</strong></td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('Sales') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td  style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('Sales') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td  style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('Sales') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td  style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('Sales') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr>
+          
+         <tr><td><h4>Fees</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'Fees'} | orderBy : 'ssort'  ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total Fees</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('Fees') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('Fees') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('Fees') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('Fees') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr>
+
+         
+
+         <tr valign="center" class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong><h4>&nbsp;Total Revenues</h4></strong></td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em"  width='100' align='right'>{{getTotalsUnadj('Revenue') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid   #4393c1 .1em; " width='100' align='right'>{{getTotalsDebits('Revenue') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em; "  width='100' align='right'>{{getTotalsCredits('Revenue') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top:  solid   #4393c1 .1em;" width='100' align='right' >{{getTotalsAdj('Revenue') | number: 2}}</td> </tr></table></td>
+
+
+         </tr>
+         </tr>
+
+         
+
+         <tr><td colspan="5"><h3 class="bg-info text-white px-2 py-2">Cost of Goods Sold</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'CostOfGoodsSold'} | orderBy : 'ssort'  ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total Cost of Goods Sold</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('CostOfGoodsSold') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr>
+
+         
+
+         <tr valign="center" class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong><h4>&nbsp;Gross Profit</h4></strong></td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em"  width='100' align='right'>{{getTotalsUnadj('Revenue') - getTotalsUnadj('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid   #4393c1 .1em; " width='100' align='right'>{{getTotalsDebits('Revenue') + getTotalsDebits('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em; "  width='100' align='right'>{{getTotalsCredits('Revenue') + getTotalsCredits('CostOfGoodsSold') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top:  solid   #4393c1 .1em;" width='100' align='right' >{{getTotalsAdj('Revenue') - getTotalsAdj('CostOfGoodsSold') | number: 2}}</td> </tr></table></td>
+
+
+         </tr>
+         </tr>
+
+
+
+         <tr><td colspan="5"><strong ><h3 class="bg-info text-white px-2 py-2">Selling Expenses</h3></strong></td></tr>
+         <tr><td><h4>Selling Expenses</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'SellingExpenses'} | orderBy : 'ssort' ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total Selling Expenses</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('SellingExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('SellingExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('SellingExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('SellingExpenses') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr> 
+
+         <tr><td colspan="5"><strong><h3 class="bg-info text-white px-2 py-2">General Expenses</h3></strong></td></tr>
+         <tr><td><h4>General Expenses</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'GeneralExpenses'} | orderBy : 'ssort' ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total General Expenses</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('GeneralExpenses') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr> 
+
+
+        <tr valign="center" class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong><h4>&nbsp;Net Operating Income</h4></strong></td></tr></table></td>
+         <td style="padding-top:20px" ><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em"  width='100' align='right'>{{getTotalsUnadj('Revenue') - getSubTotalsUnadj('CostOfGoodsSold') - getSubTotalsUnadj('SellingExpenses') -getSubTotalsUnadj('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid   #4393c1 .1em; " width='100' align='right'>{{getTotalsDebits('Revenue') + getSubTotalsDebits('CostOfGoodsSold') + getSubTotalsDebits('SellingExpenses') + getSubTotalsDebits('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em; "  width='100' align='right'>{{getTotalsCredits('Revenue') + getSubTotalsCredits('CostOfGoodsSold') + getSubTotalsCredits('SellingExpenses')  + getSubTotalsCredits('GeneralExpenses') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top:  solid   #4393c1 .1em;" width='100' align='right' >{{getTotalsAdj('Revenue') - getSubTotalsAdj('CostOfGoodsSold') - getSubTotalsAdj('SellingExpenses') -getSubTotalsAdj('GeneralExpenses') | number: 2}}</td> </tr></table></td>
+
+
+         </tr>
+         </tr>
+
+
+        <tr><td colspan="5"><strong><h3 class="bg-info text-white px-2 py-2">Other Income</h3></strong></td></tr>
+         <tr><td><h4>Other Income</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'OtherIncome'} | orderBy : 'ssort' ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total Other Income</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('OtherIncome') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('OtherIncome') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('OtherIncome') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('OtherIncome') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr> 
+
+         <tr><td colspan="5"><strong><h3 class="bg-info text-white px-2 py-2">Other Expenses</h3></strong></td></tr>
+         <tr><td><h4>Other Expenses</h4></td>
+         <tr ng-repeat="account in accounts |  filter : {'class' : 'OtherExpense'} | orderBy : 'ssort' ">
+         <td >{{account.name}}</td>
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } |  filter :  {tbday: currenttbday } |  filter :  {tbmonth: currenttbmonth }">  
+         <tr>
+         <td width='100' align='right' >{{balance.unadjbal | number:2}}</td>
+         </tr>
+         </table>
+         </td> 
+         <td>
+         <table >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right'>{{entry.debit| number:2}}</td>
+         </tr>
+         </table>
+         </td>
+         <td>
+         <table  >
+         <tr ng-repeat="entry in ajeList  | filter :  {accountID: account._id } | filter :  {tbdate: currentfye } " >
+         <td class="ajeedit" ng-click="getAje(openclient[0].name,entry.ajeid)" width='100' align='right' >{{entry.credit| number:2}}</td> 
+         </tr>
+         </table>
+         </td>
+
+         <td >
+         <table ng-repeat="balance in account.balances |  filter :  {tbyear: currenttbyear } ">  
+         <tr>
+         <td width='100' align='right' >{{getAdjustedBalance(account) | number:2}}</td>
+         </tr>
+         </table>
+         </td>
+
+         <tr class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong>&nbsp;Sub Total Other Expense</strong></td></tr></table></td>
+         <td ><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsUnadj('OtherExpense') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsDebits('OtherExpense') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right'>{{getSubTotalsCredits('OtherExpense') | number: 2}}</td></tr></table></td>
+         <td><table><tr><td style="border-top: solid #4393c1 .1em" width='100' align='right' >{{getSubTotalsAdj('OtherExpense') | number: 2}}</td> </tr></table></td>
+
+         </tr>
+
+         </tr> 
+
+
+        <tr valign="center" class="bg-primary text-white px-2 py-2">
+         <td><table><tr><td><strong><h4>&nbsp;Net Income</h4></strong></td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em"  width='100' align='right'>{{getTotalsUnadj('Revenue') - getSubTotalsUnadj('CostOfGoodsSold') - getSubTotalsUnadj('SellingExpenses') -getSubTotalsUnadj('GeneralExpenses') + getSubTotalsUnadj('OtherIncome')  -getSubTotalsUnadj('OtherExpense') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid   #4393c1 .1em; " width='100' align='right'>{{getTotalsDebits('Revenue') + getSubTotalsDebits('CostOfGoodsSold') + getSubTotalsDebits('SellingExpenses') + getSubTotalsDebits('GeneralExpenses') + getSubTotalsDebits('OtherIncome')  + getSubTotalsDebits('OtherExpense') | number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top: solid  #4393c1 .1em; "  width='100' align='right'>{{getTotalsCredits('Revenue') + getSubTotalsCredits('CostOfGoodsSold') + getSubTotalsCredits('SellingExpenses')  + getSubTotalsCredits('GeneralExpenses') + getSubTotalsCredits('OtherIncome')  + getSubTotalsCredits('OtherExpense')| number: 2}}</td></tr></table></td>
+         <td style="padding-top:20px"><table><tr><td style="border-bottom: double #4393c1; border-top:  solid   #4393c1 .1em;" width='100' align='right' >{{getTotalsAdj('Revenue') - getSubTotalsAdj('CostOfGoodsSold') - getSubTotalsAdj('SellingExpenses') -getSubTotalsAdj('GeneralExpenses') + getSubTotalsAdj('OtherIncome')  - getSubTotalsAdj('OtherExpense')| number: 2}}</td> </tr></table></td>
+
+
+         </tr>
+         </tr>
+
+
+         
+
+         </tbody>
+         </table>
+         </div>
+      
+       </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
